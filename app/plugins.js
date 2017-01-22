@@ -1,5 +1,4 @@
 const {exec} = require('child_process');
-const {homedir} = require('os');
 const {resolve, basename} = require('path');
 const {writeFileSync} = require('fs');
 
@@ -16,8 +15,8 @@ const notify = require('./notify');
 const cache = new Config();
 
 // modules path
-const path = resolve(homedir(), '.hyper_plugins');
-const localPath = resolve(homedir(), '.hyper_plugins', 'local');
+const path = resolve(config.getConfigDir(), '.hyper_plugins');
+const localPath = resolve(path, 'local');
 const availableExtensions = new Set([
   'onApp', 'onWindow', 'onRendererWindow', 'onUnload', 'middleware',
   'reduceUI', 'reduceSessions', 'reduceTermGroups',
@@ -236,7 +235,15 @@ function install(fn) {
     env.npm_config_target = process.versions.electron;
     env.npm_config_disturl = 'https://atom.io/download/atom-shell';
     /* eslint-enable camelcase  */
-    exec('npm prune && npm install --production', {
+    // Shell-specific installation commands
+    const installCommands = {
+      fish: 'npm prune; and npm install --production',
+      posix: 'npm prune && npm install --production'
+    };
+    // determine the shell we're running in
+    const whichShell = shell.match(/fish/) ? 'fish' : 'posix';
+    // Use the install command that is appropriate for our shell
+    exec(installCommands[whichShell], {
       cwd: path,
       env,
       shell

@@ -15,8 +15,13 @@ For more details, head to: https://hyper.is
 If you're on macOS, you can also use [Homebrew Cask](https://caskroom.github.io/) to download the app by running these commands:
 
 ```bash
-$ brew update
-$ brew cask install hyper
+brew update
+brew cask install hyper
+```
+
+If you're on windows, you can use [chocolatey](https://chocolatey.org/) to install the app by running the following command (package information can be found [here](https://chocolatey.org/packages/hyper/)):
+```bash
+choco install hyper
 ```
 
 ## Contribute
@@ -32,10 +37,19 @@ $ brew cask install hyper
 To make sure that your code works in the finished application, you can generate the binaries like this:
 
 ```bash
-$ npm run pack
+npm run dist
 ```
 
 After that, you'll see the binary in the `./dist` folder!
+
+### node-pty issues
+
+If after building during development you get an alert dialog related to `node-pty` issues,
+make sure its build process is working correctly by running `npm rebuild` manually inside
+the `app` directory.
+
+If you're on macOS, this typically is related to Xcode issues (like not having agreed
+to the Terms of Service by running `sudo xcodebuild` after a fresh Xcode installation).
 
 ## Related Repositories
 
